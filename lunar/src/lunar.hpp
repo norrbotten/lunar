@@ -1,4 +1,3 @@
-
 #define DLLEXPORT extern "C" __attribute((visibility("default")))
 
 #include "symbols.hpp"

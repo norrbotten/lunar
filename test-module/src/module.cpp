@@ -2,24 +2,22 @@
 
 #include <lunar.hpp>
 
-DLLEXPORT int hello(lua_State* L) {
+static int hello(lua_State* L) {
     Lunar::Symbols::lua_pushnumber(L, 1.234);
     return 1;
 }
 
 LUNAR_MODULE_OPEN() {
-    Lunar::Loader::Initialize();
+    if (Lunar::Loader::Initialize())
+        return 0;
 
-    puts("Initialized LUNAR");
+    Lunar::Symbols::lua_pushcfunction(L, &hello);
+    Lunar::Symbols::lua_setfield(L, LUA_GLOBALSINDEX, "hello");
 
-    Lunar::Symbols::lua_createtable(L, 0, 0);
-    Lunar::Symbols::lua_pushcclosure(L, hello, 0);
-    Lunar::Symbols::lua_setfield(L, -2, "hello");
-
-    return 1;
+    return 0;
 }
 
 LUNAR_MODULE_CLOSE() {
     Lunar::Loader::Deinitialize();
-    return 1;
+    return 0;
 }

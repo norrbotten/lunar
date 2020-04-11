@@ -121,8 +121,13 @@ void lua_pushstring(lua_State* L, const char* s) {
     return CallSymbol<void, lua_State*, const char*>("lua_pushstring", L, s);
 }
 
-void lua_pushcclosure(lua_State* L, lua_CFunction c, int i) {
-    return CallSymbol<void, lua_State*, lua_CFunction, int>("lua_pushcclosure", L, c, i);
+void lua_pushcclosure(lua_State* L, lua_CFunction f, int i) {
+    return CallSymbol<void, lua_State*, lua_CFunction, int>("lua_pushcclosure", L, f, i);
+}
+
+#undef lua_pushcfunction
+void lua_pushcfunction(lua_State* L, lua_CFunction f) {
+    return CallSymbol<void, lua_State*, lua_CFunction, int>("lua_pushcclosure", L, f, 0);
 }
 
 void lua_pushboolean(lua_State* L, int b) {
@@ -147,6 +152,11 @@ void lua_createtable(lua_State* L, int i, int j) {
     return CallSymbol<void, lua_State*, int, int>("lua_createtable", L, i, j);
 }
 
+#undef lua_newtable
+void lua_newtable(lua_State* L) {
+    return CallSymbol<void, lua_State*, int, int>("lua_createtable", L, 0, 0);
+}
+
 void* lua_newuserdata(lua_State* L, size_t s) {
     return CallSymbol<void*, lua_State*, size_t>("lua_newuserdata", L, s);
 }
@@ -160,7 +170,7 @@ void lua_settable(lua_State* L, int i) {
 }
 
 void lua_setfield(lua_State* L, int i, const char* c) {
-    return CallSymbol<void, lua_State*, int, const char*>("lua_settable", L, i, c);
+    return CallSymbol<void, lua_State*, int, const char*>("lua_setfield", L, i, c);
 }
 
 void lua_rawset(lua_State* L, int i) {

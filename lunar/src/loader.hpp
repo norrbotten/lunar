@@ -14,12 +14,19 @@ static void* handle = nullptr;
 
 static std::unordered_map<const char*, void*> symbol_map;
 
-static void Initialize() {
-    handle = dlopen(LUA_MODULE_PATH, RTLD_LAZY | RTLD_DEEPBIND);
+static bool Initialize() {
+    puts("");
+    puts("[Lunar] - Initializing");
+    handle = dlopen(LUA_MODULE_PATH, RTLD_LAZY | RTLD_NOLOAD);
+
     if (handle == nullptr) {
-        exit(1);
-        puts("Lunar LuaLoader Error: lua_shared library not found");
+        puts("[Lunar] - ERROR: Could not find lua_shared");
+        return true;
     }
+
+    puts("[Lunar] - lua_shared library loaded");
+
+    return false;
 }
 
 static void Deinitialize() {
@@ -39,7 +46,6 @@ auto CallSymbol = [](const char* name, Args... args) -> Ret {
         auto* raw_symbol = dlsym(handle, name);
         symbol_map[name] = raw_symbol;
 
-        Ret (*symbol)(Args...);
         *(void**)(&symbol) = raw_symbol;
     }
 
