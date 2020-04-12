@@ -21,6 +21,7 @@ __This is very early in development and likely isn't very useful right now__
     3. `cd makefiles`
     4. `make config=release` - use `debug` to include debug symbols in the binary
     5. Your library is now in `build/bin/`. You can verify it by running `premake5 verify` in your projects directory.
+    6. If you configured the `ìnstall_dir` in the premake, you can run `premake5 install` to copy it there.
 
 **Example code** Refer to the 'test-module' example
 
