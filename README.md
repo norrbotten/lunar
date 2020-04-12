@@ -26,8 +26,6 @@ __This is very early in development and likely isn't very useful right now__
 **Example code** Refer to the 'test-module' example
 
 ## Dependencies
-  * `Lua 5.1 headers` - These should be somewhere where your compiler can find them, ie `/usr/include/` or in the `lunar/src/` directory
- 
   * (OPTIONAL) Premake5 - If you're going to use the example projects premake file
 
 # Windows support?
