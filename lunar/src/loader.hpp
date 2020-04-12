@@ -49,7 +49,6 @@ auto CallSymbol = [](const char* name, Args... args) -> Ret {
         *(void**)(&symbol) = raw_symbol;
     }
 
-    printf("%p\n", symbol);
     return symbol(args...);
 };
 

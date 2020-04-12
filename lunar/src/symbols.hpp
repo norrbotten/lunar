@@ -1,106 +1,124 @@
 #pragma once
 
 #include "loader.hpp"
-
-#include <lua5.1/lua.h>
+#include "luadef.hpp"
 
 namespace Lunar::Symbols {
+
 using Lunar::Loader::CallSymbol;
 
-void lua_getfenv(lua_State* L, int i = 0) {
-    return CallSymbol<void, lua_State*, int>("lua_getfenv", L, i);
+lua_State* lua_newstate(lua_Alloc f, void* ud) {
+    return CallSymbol<lua_State*, lua_Alloc, void*>("lua_newstate", f, ud);
 }
 
-int lua_setfenv(lua_State* L, int i = 0) {
-    return CallSymbol<int, lua_State*, int>("lua_setfenv", L, i);
+void lua_close(lua_State* L) { return CallSymbol<void, lua_State*>("lua_close", L); }
+
+lua_State* lua_newthread(lua_State* L) {
+    return CallSymbol<lua_State*, lua_State*>("lua_newthread", L);
 }
 
-int lua_error(lua_State* L) { return CallSymbol<int, lua_State*>("lua_error", L); }
+lua_CFunction lua_atpanic(lua_State* L, lua_CFunction panicf) {
+    return CallSymbol<lua_CFunction, lua_State*, lua_CFunction>("lua_atpanic", L, panicf);
+}
 
 int lua_gettop(lua_State* L) { return CallSymbol<int, lua_State*>("lua_gettop", L); }
 
-void lua_insert(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_insert", L, i);
+void lua_settop(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_settop", L, idx);
 }
 
-void lua_remove(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_remove", L, i);
+void lua_pushvalue(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_pushvalue", L, idx);
 }
 
-void lua_replace(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_replace", L, i);
+void lua_remove(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_remove", L, idx);
 }
 
-int lua_isnumber(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_isnumber", L, i);
+void lua_insert(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_insert", L, idx);
 }
 
-int lua_isstring(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_isstring", L, i);
+void lua_replace(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_replace", L, idx);
 }
 
-int lua_iscfunction(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_iscfunction", L, i);
+int lua_checkstack(lua_State* L, int sz) {
+    return CallSymbol<int, lua_State*, int>("lua_checkstack", L, sz);
 }
 
-int lua_isuserdata(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_isuserdata", L, i);
+void lua_xmove(lua_State* from, lua_State* to, int n) {
+    return CallSymbol<void, lua_State*, lua_State*, int>("lua_xmove", from, to, n);
 }
 
-int lua_type(lua_State* L, int i) { return CallSymbol<int, lua_State*, int>("lua_type", L, i); }
-
-const char* lua_typename(lua_State* L, int i) {
-    return CallSymbol<const char*, lua_State*, int>("lua_typename", L, i);
+int lua_isnumber(lua_State* L, int idx) {
+    return CallSymbol<int, lua_State*, int>("lua_isnumber", L, idx);
 }
 
-int lua_equal(lua_State* L, int i, int j) {
-    return CallSymbol<int, lua_State*, int, int>("lua_equal", L, i, j);
+int lua_isstring(lua_State* L, int idx) {
+    return CallSymbol<int, lua_State*, int>("lua_isstring", L, idx);
 }
 
-int lua_rawequal(lua_State* L, int i, int j) {
-    return CallSymbol<int, lua_State*, int, int>("lua_rawequal", L, i, j);
+int lua_iscfunction(lua_State* L, int idx) {
+    return CallSymbol<int, lua_State*, int>("lua_iscfunction", L, idx);
 }
 
-int lua_lessthan(lua_State* L, int i, int j) {
-    return CallSymbol<int, lua_State*, int, int>("lua_lessthan", L, i, j);
+int lua_isuserdata(lua_State* L, int idx) {
+    return CallSymbol<int, lua_State*, int>("lua_isuserdata", L, idx);
 }
 
-lua_Number lua_tonumber(lua_State* L, int i) {
-    return CallSymbol<lua_Number, lua_State*, int>("lua_tonumber", L, i);
+int lua_type(lua_State* L, int idx) { return CallSymbol<int, lua_State*, int>("lua_type", L, idx); }
+
+const char* lua_typename(lua_State* L, int tp) {
+    return CallSymbol<const char*, lua_State*, int>("lua_typename", L, tp);
 }
 
-lua_Integer lua_tointeger(lua_State* L, int i) {
-    return CallSymbol<lua_Integer, lua_State*, int>("lua_tointeger", L, i);
+int lua_equal(lua_State* L, int idx1, int idx2) {
+    return CallSymbol<int, lua_State*, int, int>("lua_equal", L, idx1, idx2);
 }
 
-int lua_toboolean(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_toboolean", L, i);
+int lua_rawequal(lua_State* L, int idx1, int idx2) {
+    return CallSymbol<int, lua_State*, int, int>("lua_rawequal", L, idx1, idx2);
 }
 
-const char* lua_tolstring(lua_State* L, int i) {
-    return CallSymbol<const char*, lua_State*, int>("lua_tolstring", L, i);
+int lua_lessthan(lua_State* L, int idx1, int idx2) {
+    return CallSymbol<int, lua_State*, int, int>("lua_lessthan", L, idx1, idx2);
 }
 
-size_t lua_objlen(lua_State* L, int i) {
-    return CallSymbol<size_t, lua_State*, int>("lua_objlen", L, i);
+lua_Number lua_tonumber(lua_State* L, int idx) {
+    return CallSymbol<lua_Number, lua_State*, int>("lua_tonumber", L, idx);
 }
 
-#undef lua_strlen
-size_t lua_strlen(lua_State* L, int i) {
-    return CallSymbol<size_t, lua_State*, int>("lua_objlen", L, i); // lua_objlen is not a typo
-                                                                    // lua_strlen is a macro
+lua_Integer lua_tointeger(lua_State* L, int idx) {
+    return CallSymbol<lua_Integer, lua_State*, int>("lua_tointeger", L, idx);
 }
 
-lua_CFunction lua_tocfunction(lua_State* L, int i) {
-    return CallSymbol<lua_CFunction, lua_State*, int>("lua_tocfunction", L, i);
+int lua_toboolean(lua_State* L, int idx) {
+    return CallSymbol<int, lua_State*, int>("lua_toboolean", L, idx);
 }
 
-void* lua_touserdata(lua_State* L, int i) {
-    return CallSymbol<void*, lua_State*, int>("lua_touserdata", L, i);
+const char* lua_tolstring(lua_State* L, int idx, size_t* len) {
+    return CallSymbol<const char*, lua_State*, int, size_t*>("lua_tolstring", L, idx, len);
 }
 
-const void* lua_topointer(lua_State* L, int i) {
-    return CallSymbol<const void*, lua_State*, int>("lua_topointer", L, i);
+size_t lua_objlen(lua_State* L, int idx) {
+    return CallSymbol<size_t, lua_State*, int>("lua_objlen", L, idx);
+}
+
+lua_CFunction lua_tocfunction(lua_State* L, int idx) {
+    return CallSymbol<lua_CFunction, lua_State*, int>("lua_tocfunction", L, idx);
+}
+
+void* lua_touserdata(lua_State* L, int idx) {
+    return CallSymbol<void*, lua_State*, int>("lua_touserdata", L, idx);
+}
+
+lua_State* lua_tothread(lua_State* L, int idx) {
+    return CallSymbol<lua_State*, lua_State*, int>("lua_tothread", L, idx);
+}
+
+const void* lua_topointer(lua_State* L, int idx) {
+    return CallSymbol<const void*, lua_State*, int>("lua_topointer", L, idx);
 }
 
 void lua_pushnil(lua_State* L) { return CallSymbol<void, lua_State*>("lua_pushnil", L); }
@@ -113,124 +131,272 @@ void lua_pushinteger(lua_State* L, lua_Integer n) {
     return CallSymbol<void, lua_State*, lua_Integer>("lua_pushinteger", L, n);
 }
 
-void lua_pushlstring(lua_State* L, const char* s, size_t n) {
-    return CallSymbol<void, lua_State*, const char*, size_t>("lua_pushlstring", L, s, n);
+void lua_pushlstring(lua_State* L, const char* s, size_t l) {
+    return CallSymbol<void, lua_State*, const char*, size_t>("lua_pushlstring", L, s, l);
 }
 
 void lua_pushstring(lua_State* L, const char* s) {
     return CallSymbol<void, lua_State*, const char*>("lua_pushstring", L, s);
 }
 
-void lua_pushcclosure(lua_State* L, lua_CFunction f, int i) {
-    return CallSymbol<void, lua_State*, lua_CFunction, int>("lua_pushcclosure", L, f, i);
-}
-
-#undef lua_pushcfunction
-void lua_pushcfunction(lua_State* L, lua_CFunction f) {
-    return CallSymbol<void, lua_State*, lua_CFunction, int>("lua_pushcclosure", L, f, 0);
+void lua_pushcclosure(lua_State* L, lua_CFunction fn, int n) {
+    return CallSymbol<void, lua_State*, lua_CFunction, int>("lua_pushcclosure", L, fn, n);
 }
 
 void lua_pushboolean(lua_State* L, int b) {
     return CallSymbol<void, lua_State*, int>("lua_pushboolean", L, b);
 }
 
-void lua_pushlightuserdata(lua_State* L, void* d) {
-    return CallSymbol<void, lua_State*, void*>("lua_pushlightuserdata", L, d);
+void lua_pushlightuserdata(lua_State* L, void* p) {
+    return CallSymbol<void, lua_State*, void*>("lua_pushlightuserdata", L, p);
 }
 
 int lua_pushthread(lua_State* L) { return CallSymbol<int, lua_State*>("lua_pushthread", L); }
 
-void lua_gettable(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_gettable", L, i);
+void lua_gettable(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_gettable", L, idx);
 }
 
-void lua_getfield(lua_State* L, int i, const char* c) {
-    return CallSymbol<void, lua_State*, int, const char*>("lua_getfield", L, i, c);
+void lua_getfield(lua_State* L, int idx, const char* k) {
+    return CallSymbol<void, lua_State*, int, const char*>("lua_getfield", L, idx, k);
 }
 
-void lua_createtable(lua_State* L, int i, int j) {
-    return CallSymbol<void, lua_State*, int, int>("lua_createtable", L, i, j);
+void lua_rawget(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_rawget", L, idx);
 }
 
-#undef lua_newtable
-void lua_newtable(lua_State* L) {
-    return CallSymbol<void, lua_State*, int, int>("lua_createtable", L, 0, 0);
+void lua_rawgeti(lua_State* L, int idx, int n) {
+    return CallSymbol<void, lua_State*, int, int>("lua_rawgeti", L, idx, n);
 }
 
-void* lua_newuserdata(lua_State* L, size_t s) {
-    return CallSymbol<void*, lua_State*, size_t>("lua_newuserdata", L, s);
+void lua_createtable(lua_State* L, int narr, int nrec) {
+    return CallSymbol<void, lua_State*, int, int>("lua_createtable", L, narr, nrec);
 }
 
-int lua_getmetatable(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_getmetatable", L, i);
+void* lua_newuserdata(lua_State* L, size_t sz) {
+    return CallSymbol<void*, lua_State*, size_t>("lua_newuserdata", L, sz);
 }
 
-void lua_settable(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_settable", L, i);
+int lua_getmetatable(lua_State* L, int objindex) {
+    return CallSymbol<int, lua_State*, int>("lua_getmetatable", L, objindex);
 }
 
-void lua_setfield(lua_State* L, int i, const char* c) {
-    return CallSymbol<void, lua_State*, int, const char*>("lua_setfield", L, i, c);
+void lua_getfenv(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_getfenv", L, idx);
 }
 
-void lua_rawset(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_rawset", L, i);
+void lua_settable(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_settable", L, idx);
 }
 
-void lua_rawseti(lua_State* L, int i, int j) {
-    return CallSymbol<void, lua_State*, int, int>("lua_rawset", L, i, j);
+void lua_setfield(lua_State* L, int idx, const char* k) {
+    return CallSymbol<void, lua_State*, int, const char*>("lua_setfield", L, idx, k);
 }
 
-int lua_setmetatable(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_setmetatable", L, i);
+void lua_rawset(lua_State* L, int idx) {
+    return CallSymbol<void, lua_State*, int>("lua_rawset", L, idx);
 }
 
-int lua_call(lua_State* L, int i, int j) {
-    return CallSymbol<int, lua_State*, int, int>("lua_call", L, i, j);
+void lua_rawseti(lua_State* L, int idx, int n) {
+    return CallSymbol<void, lua_State*, int, int>("lua_rawseti", L, idx, n);
 }
 
-int lua_pcall(lua_State* L, int i, int j, int k) {
-    return CallSymbol<int, lua_State*, int, int, int>("lua_call", L, i, j, k);
+int lua_setmetatable(lua_State* L, int objindex) {
+    return CallSymbol<int, lua_State*, int>("lua_setmetatable", L, objindex);
 }
 
-int lua_cpcall(lua_State* L, lua_CFunction c, void* d) {
-    return CallSymbol<int, lua_State*, lua_CFunction, void*>("lua_cpcall", L, c, d);
+int lua_setfenv(lua_State* L, int idx) {
+    return CallSymbol<int, lua_State*, int>("lua_setfenv", L, idx);
 }
 
-int lua_load(lua_State* L, lua_Reader r, void* d, const char* c) {
-    return CallSymbol<int, lua_State*, lua_Reader, void*, const char*>("lua_load", L, r, d, c);
+void lua_call(lua_State* L, int nargs, int nresults) {
+    return CallSymbol<void, lua_State*, int, int>("lua_call", L, nargs, nresults);
 }
 
-int load_dump(lua_State* L, lua_Writer w, void* d) {
-    return CallSymbol<int, lua_State*, lua_Writer, void*>("lua_dump", L, w, d);
+int lua_pcall(lua_State* L, int nargs, int nresults, int errfunc) {
+    return CallSymbol<int, lua_State*, int, int, int>("lua_pcall", L, nargs, nresults, errfunc);
 }
 
-int lua_resume_real(lua_State* L, int i) {
-    return CallSymbol<int, lua_State*, int>("lua_resume_real", L, i);
+int lua_cpcall(lua_State* L, lua_CFunction func, void* ud) {
+    return CallSymbol<int, lua_State*, lua_CFunction, void*>("lua_cpcall", L, func, ud);
 }
 
-int lua_yield(lua_State* L, int i) { return CallSymbol<int, lua_State*, int>("lua_yield", L, i); }
+int lua_load(lua_State* L, lua_Reader reader, void* dt, const char* chunkname) {
+    return CallSymbol<int, lua_State*, lua_Reader, void*, const char*>("lua_load", L, reader, dt,
+                                                                       chunkname);
+}
 
-int lua_resume(lua_State* L, int i) { return CallSymbol<int, lua_State*, int>("lua_resume", L, i); }
+int lua_dump(lua_State* L, lua_Writer writer, void* data) {
+    return CallSymbol<int, lua_State*, lua_Writer, void*>("lua_dump", L, writer, data);
+}
+
+int lua_yield(lua_State* L, int nresults) {
+    return CallSymbol<int, lua_State*, int>("lua_yield", L, nresults);
+}
+
+int lua_resume(lua_State* L, int narg) {
+    return CallSymbol<int, lua_State*, int>("lua_resume", L, narg);
+}
 
 int lua_status(lua_State* L) { return CallSymbol<int, lua_State*>("lua_status", L); }
 
-int lua_gc(lua_State* L, int i, int j) {
-    return CallSymbol<int, lua_State*, int, int>("lua_gc", L, i, j);
+int lua_gc(lua_State* L, int what, int data) {
+    return CallSymbol<int, lua_State*, int, int>("lua_gc", L, what, data);
 }
 
-int lua_next(lua_State* L, int i) { return CallSymbol<int, lua_State*, int>("lua_next", L, i); }
+int lua_error(lua_State* L) { return CallSymbol<int, lua_State*>("lua_error", L); }
 
-void lua_concat(lua_State* L, int i) {
-    return CallSymbol<void, lua_State*, int>("lua_concat", L, i);
+int lua_next(lua_State* L, int idx) { return CallSymbol<int, lua_State*, int>("lua_next", L, idx); }
+
+void lua_concat(lua_State* L, int n) {
+    return CallSymbol<void, lua_State*, int>("lua_concat", L, n);
 }
 
-lua_Alloc lua_getallocf(lua_State* L, void** d) {
-    return CallSymbol<lua_Alloc, lua_State*, void**>("lua_getallocf", L, d);
+lua_Alloc lua_getallocf(lua_State* L, void** ud) {
+    return CallSymbol<lua_Alloc, lua_State*, void*>("lua_getallocf", L, *ud);
 }
 
-void lua_setallocf(lua_State* L, lua_Alloc a, void* d) {
-    return CallSymbol<void, lua_State*, lua_Alloc, void*>("lua_setallocf", L, a, d);
+void lua_setallocf(lua_State* L, lua_Alloc f, void* ud) {
+    return CallSymbol<void, lua_State*, lua_Alloc, void*>("lua_setallocf", L, f, ud);
+}
+
+void lua_setlevel(lua_State* from, lua_State* to) {
+    return CallSymbol<void, lua_State*, lua_State*>("lua_setlevel", from, to);
+}
+
+int lua_getstack(lua_State* L, int level, lua_Debug* ar) {
+    return CallSymbol<int, lua_State*, int, lua_Debug*>("lua_getstack", L, level, ar);
+}
+
+int lua_getinfo(lua_State* L, const char* what, lua_Debug* ar) {
+    return CallSymbol<int, lua_State*, const char*, lua_Debug*>("lua_getinfo", L, what, ar);
+}
+
+const char* lua_getlocal(lua_State* L, const lua_Debug* ar, int n) {
+    return CallSymbol<const char*, lua_State*, const lua_Debug*, int>("lua_getlocal", L, ar, n);
+}
+
+const char* lua_setlocal(lua_State* L, const lua_Debug* ar, int n) {
+    return CallSymbol<const char*, lua_State*, const lua_Debug*, int>("lua_setlocal", L, ar, n);
+}
+
+const char* lua_getupvalue(lua_State* L, int funcindex, int n) {
+    return CallSymbol<const char*, lua_State*, int, int>("lua_getupvalue", L, funcindex, n);
+}
+
+const char* lua_setupvalue(lua_State* L, int funcindex, int n) {
+    return CallSymbol<const char*, lua_State*, int, int>("lua_setupvalue", L, funcindex, n);
+}
+
+void luaI_openlib(lua_State* L, const char* libname, const luaL_Reg* l, int nup) {
+    return CallSymbol<void, lua_State*, const char*, const luaL_Reg*, int>("luaI_openlib", L,
+                                                                           libname, l, nup);
+}
+
+void luaL_register(lua_State* L, const char* libname, const luaL_Reg* l) {
+    return CallSymbol<void, lua_State*, const char*, const luaL_Reg*>("luaL_register", L, libname,
+                                                                      l);
+}
+
+int luaL_getmetafield(lua_State* L, int obj, const char* e) {
+    return CallSymbol<int, lua_State*, int, const char*>("luaL_getmetafield", L, obj, e);
+}
+
+int luaL_callmeta(lua_State* L, int obj, const char* e) {
+    return CallSymbol<int, lua_State*, int, const char*>("luaL_callmeta", L, obj, e);
+}
+
+int luaL_typerror(lua_State* L, int narg, const char* tname) {
+    return CallSymbol<int, lua_State*, int, const char*>("luaL_typerror", L, narg, tname);
+}
+
+int luaL_argerror(lua_State* L, int numarg, const char* extramsg) {
+    return CallSymbol<int, lua_State*, int, const char*>("luaL_argerror", L, numarg, extramsg);
+}
+
+const char* luaL_checklstring(lua_State* L, int numArg, size_t* l) {
+    return CallSymbol<const char*, lua_State*, int, size_t*>("luaL_checklstring", L, numArg, l);
+}
+
+const char* luaL_optlstring(lua_State* L, int numArg, const char* def, size_t* l) {
+    return CallSymbol<const char*, lua_State*, int, const char*, size_t*>("luaL_optlstring", L,
+                                                                          numArg, def, l);
+}
+
+lua_Number luaL_checknumber(lua_State* L, int numArg) {
+    return CallSymbol<lua_Number, lua_State*, int>("luaL_checknumber", L, numArg);
+}
+
+lua_Number luaL_optnumber(lua_State* L, int nArg, lua_Number def) {
+    return CallSymbol<lua_Number, lua_State*, int, lua_Number>("luaL_optnumber", L, nArg, def);
+}
+
+lua_Integer luaL_checkinteger(lua_State* L, int numArg) {
+    return CallSymbol<lua_Integer, lua_State*, int>("luaL_checkinteger", L, numArg);
+}
+
+lua_Integer luaL_optinteger(lua_State* L, int nArg, lua_Integer def) {
+    return CallSymbol<lua_Integer, lua_State*, int, lua_Integer>("luaL_optinteger", L, nArg, def);
+}
+
+void luaL_checkstack(lua_State* L, int sz, const char* msg) {
+    return CallSymbol<void, lua_State*, int, const char*>("luaL_checkstack", L, sz, msg);
+}
+
+void luaL_checktype(lua_State* L, int narg, int t) {
+    return CallSymbol<void, lua_State*, int, int>("luaL_checktype", L, narg, t);
+}
+
+void luaL_checkany(lua_State* L, int narg) {
+    return CallSymbol<void, lua_State*, int>("luaL_checkany", L, narg);
+}
+
+int luaL_newmetatable(lua_State* L, const char* tname) {
+    return CallSymbol<int, lua_State*, const char*>("luaL_newmetatable", L, tname);
+}
+
+void* luaL_checkudata(lua_State* L, int ud, const char* tname) {
+    return CallSymbol<void*, lua_State*, int, const char*>("luaL_checkudata", L, ud, tname);
+}
+
+void luaL_where(lua_State* L, int lvl) {
+    return CallSymbol<void, lua_State*, int>("luaL_where", L, lvl);
+}
+
+int luaL_checkoption(lua_State* L, int narg, const char* def, const char* const lst[]) {
+    return CallSymbol<int, lua_State*, int, const char*, const char* const[]>("luaL_checkoption", L,
+                                                                              narg, def, lst);
+}
+
+int luaL_ref(lua_State* L, int t) { return CallSymbol<int, lua_State*, int>("luaL_ref", L, t); }
+
+void luaL_unref(lua_State* L, int t, int ref) {
+    return CallSymbol<void, lua_State*, int, int>("luaL_unref", L, t, ref);
+}
+
+int luaL_loadfile(lua_State* L, const char* filename) {
+    return CallSymbol<int, lua_State*, const char*>("luaL_loadfile", L, filename);
+}
+
+int luaL_loadbuffer(lua_State* L, const char* buff, size_t sz, const char* name) {
+    return CallSymbol<int, lua_State*, const char*, size_t, const char*>("luaL_loadbuffer", L, buff,
+                                                                         sz, name);
+}
+
+int luaL_loadstring(lua_State* L, const char* s) {
+    return CallSymbol<int, lua_State*, const char*>("luaL_loadstring", L, s);
+}
+
+lua_State* luaL_newstate() { return CallSymbol<lua_State*>("luaL_newstate"); }
+
+const char* luaL_gsub(lua_State* L, const char* s, const char* p, const char* r) {
+    return CallSymbol<const char*, lua_State*, const char*, const char*, const char*>("luaL_gsub",
+                                                                                      L, s, p, r);
+}
+
+const char* luaL_findtable(lua_State* L, int idx, const char* fname, int szhint) {
+    return CallSymbol<const char*, lua_State*, int, const char*, int>("luaL_findtable", L, idx,
+                                                                      fname, szhint);
 }
 
 } // namespace Lunar::Symbols
