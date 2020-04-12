@@ -2,7 +2,7 @@ cd test-module
 premake5 gmake2
 
 cd makefiles
-make
+make config=release
 
 cd ..
 premake5 verify

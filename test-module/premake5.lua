@@ -27,9 +27,11 @@ workspace ("lunar-" .. module_name)
 
     filter { "configurations:debug" }
         symbols "On"
+        buildoptions { "-Wall", "-Wextra", "-Wpedantic", "-Wnull-dereference", "-Wmisleading-indentation" }
 
     filter { "configurations:release" }
         optimize "On"
+        buildoptions { "-O3", "-Wall", "-Wextra", "-Wpedantic", "-Wnull-dereference", "-Wmisleading-indentation" }
 
     filter { }
 

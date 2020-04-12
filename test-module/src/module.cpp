@@ -1,23 +1,22 @@
-#include <cstdio>
-
 #include <lunar.hpp>
-
-static int hello(lua_State* L) {
-    Lunar::Symbols::lua_pushinteger(L, rand());
-    return 1;
-}
 
 LUNAR_MODULE_OPEN() {
     if (Lunar::Loader::Initialize())
         return 0;
 
-    Lunar::Symbols::lua_pushcfunction(L, &hello);
-    Lunar::Symbols::lua_setfield(L, LUA_GLOBALSINDEX, "hello");
+    Lunar::State state(L);
+
+    state.RunString("print(\"Hello from C++\")");
+    state.RunString("print(1 ++ 4)", [](std::string err) {
+        puts("Error!");
+        puts(err.c_str());
+    });
 
     return 0;
 }
 
 LUNAR_MODULE_CLOSE() {
+    (void)L;
     Lunar::Loader::Deinitialize();
     return 0;
 }
