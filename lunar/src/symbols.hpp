@@ -484,7 +484,7 @@ auto luaL_getmetatable(lua_State* L, const char* n) {
     return lua_getfield(L, LUA_REGISTRYINDEX, n);
 }
 
-template <typename T> auto luaL_opt(lua_State* L, T (*f)(lua_State*, int), int arg, T def) {
+template <typename Ret> auto luaL_opt(lua_State* L, Ret (*f)(lua_State*, int), int arg, Ret def) {
     // if it compiles it works HEHEHEHE
     return lua_isnoneornil(L, arg) ? def : f(L, arg);
     // as ive understood, this checks if arg is none or nil,

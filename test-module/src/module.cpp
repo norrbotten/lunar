@@ -3,7 +3,7 @@
 #include <lunar.hpp>
 
 static int hello(lua_State* L) {
-    Lunar::Symbols::lua_pushnumber(L, 1.234);
+    Lunar::Symbols::lua_pushinteger(L, rand());
     return 1;
 }
 
