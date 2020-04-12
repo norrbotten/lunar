@@ -14,14 +14,14 @@ __This is very early in development and likely isn't very useful right now__
 1. Make a project with the same structure as the `test-module` example, copying the premake
 2. Modify the premake to your likings
 3. Include the lunar headers in your project `#include <lunar.hpp>`
-4. Define your modules entry and exit point using the `LUNAR_MODULE_OPEN` and `LUNAR_MODULE_CLOSE` libraries
+4. Define your modules entry and exit point using the `LUNAR_MODULE_OPEN` and `LUNAR_MODULE_CLOSE` macros
 5. Build it
     1. `cd` to your projects directory
     2. `premake5 gmake2`
     3. `cd makefiles`
     4. `make config=release` - use `debug` to include debug symbols in the binary
     5. Your library is now in `build/bin/`. You can verify it by running `premake5 verify` in your projects directory.
-    6. If you configured the `ìnstall_dir` in the premake, you can run `premake5 install` to copy it there.
+    6. If you configured the `install_dir` in the premake, you can run `premake5 install` to copy it there.
 
 **Example code** Refer to the 'test-module' example
 
