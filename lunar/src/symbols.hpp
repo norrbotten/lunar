@@ -288,6 +288,58 @@ const char* lua_setupvalue(lua_State* L, int funcindex, int n) {
     return CallSymbol<const char*, lua_State*, int, int>("lua_setupvalue", L, funcindex, n);
 }
 
+int lua_sethook(lua_State* L, lua_Hook func, int mask, int count) {
+    return CallSymbol<int, lua_State*, lua_Hook, int, int>("lua_sethook", L, func, mask, count);
+}
+
+lua_Hook lua_gethook(lua_State* L) { return CallSymbol<lua_Hook, lua_State*>("lua_gethook", L); }
+
+int lua_gethookmask(lua_State* L) { return CallSymbol<int, lua_State*>("lua_gethookmask", L); }
+
+int lua_gethookcount(lua_State* L) { return CallSymbol<int, lua_State*>("lua_gethookcount", L); }
+
+auto lua_pop(lua_State* L, int n) { return lua_settop(L, (-n) - 1); }
+
+auto lua_newtable(lua_State* L) { return lua_createtable(L, 0, 0); }
+
+auto lua_setglobal(lua_State* L, const char* s) { return lua_setfield(L, LUA_GLOBALSINDEX, s); }
+
+auto lua_getglobal(lua_State* L, const char* s) { return lua_getfield(L, LUA_GLOBALSINDEX, s); }
+
+auto lua_pushcfunction(lua_State* L, lua_CFunction f) { return lua_pushcclosure(L, f, 0); }
+
+auto lua_register(lua_State* L, const char* n, lua_CFunction f) {
+    return lua_pushcfunction(L, f), lua_setglobal(L, n);
+}
+
+auto lua_strlen(lua_State* L, int i) { return lua_objlen(L, i); }
+
+auto lua_isfunction(lua_State* L, int i) { return lua_type(L, i) == LUA_TFUNCTION; }
+
+auto lua_istable(lua_State* L, int i) { return lua_type(L, i) == LUA_TTABLE; }
+
+auto lua_islightuserdata(lua_State* L, int i) { return lua_type(L, i) == LUA_TLIGHTUSERDATA; }
+
+auto lua_isnil(lua_State* L, int i) { return lua_type(L, i) == LUA_TNIL; }
+
+auto lua_isboolean(lua_State* L, int i) { return lua_type(L, i) == LUA_TBOOLEAN; }
+
+auto lua_isthread(lua_State* L, int i) { return lua_type(L, i) == LUA_TTHREAD; }
+
+auto lua_isnone(lua_State* L, int i) { return lua_type(L, i) == LUA_TNONE; }
+
+auto lua_isnoneornil(lua_State* L, int i) { return lua_type(L, i) <= 0; }
+
+auto lua_pushliteral(lua_State* L, const char* s) {
+    return lua_pushlstring(L, s, sizeof(s) / sizeof(char) - 1);
+}
+
+auto lua_tostring(lua_State* L, int i) { return lua_tolstring(L, i, NULL); }
+
+auto lua_getregistry(lua_State* L) { return lua_pushvalue(L, LUA_REGISTRYINDEX); }
+
+auto lua_getgccount(lua_State* L) { return lua_gc(L, LUA_GCCOUNT, 0); }
+
 void luaI_openlib(lua_State* L, const char* libname, const luaL_Reg* l, int nup) {
     return CallSymbol<void, lua_State*, const char*, const luaL_Reg*, int>("luaI_openlib", L,
                                                                            libname, l, nup);
@@ -397,6 +449,46 @@ const char* luaL_gsub(lua_State* L, const char* s, const char* p, const char* r)
 const char* luaL_findtable(lua_State* L, int idx, const char* fname, int szhint) {
     return CallSymbol<const char*, lua_State*, int, const char*, int>("luaL_findtable", L, idx,
                                                                       fname, szhint);
+}
+
+auto lua_open() { return luaL_newstate(); }
+
+template <typename Cond>
+auto luaL_argcheck(lua_State* L, Cond cond, int numarg, const char* extramsg) {
+    return (void)(cond) || luaL_argerror(L, numarg, extramsg);
+}
+
+auto luaL_checkstring(lua_State* L, int n) { return luaL_checklstring(L, n, NULL); }
+
+auto luaL_optstring(lua_State* L, int n, const char* d) { return luaL_optlstring(L, n, d, NULL); }
+
+auto luaL_checkint(lua_State* L, int n) { return (int)luaL_checkinteger(L, n); }
+
+auto luaL_optint(lua_State* L, int n, lua_Integer d) { return (int)luaL_optinteger(L, n, d); }
+
+auto luaL_checklong(lua_State* L, int n) { return (long)luaL_checkinteger(L, n); }
+
+auto luaL_optlong(lua_State* L, int n, lua_Integer d) { (long)luaL_optinteger(L, n, d); }
+
+auto luaL_typename(lua_State* L, int i) { return lua_typename(L, lua_type(L, i)); }
+
+auto luaL_dofile(lua_State* L, const char* fn) {
+    return luaL_loadfile(L, fn) || lua_pcall(L, 0, LUA_MULTRET, 0);
+}
+
+auto luaL_dostring(lua_State* L, const char* s) {
+    return luaL_loadstring(L, s) || lua_pcall(L, 0, LUA_MULTRET, 0);
+}
+
+auto luaL_getmetatable(lua_State* L, const char* n) {
+    return lua_getfield(L, LUA_REGISTRYINDEX, n);
+}
+
+template <typename T> auto luaL_opt(lua_State* L, T (*f)(lua_State*, int), int arg, T def) {
+    // if it compiles it works HEHEHEHE
+    return lua_isnoneornil(L, arg) ? def : f(L, arg);
+    // as ive understood, this checks if arg is none or nil,
+    // if so it returns the default, else the result of f()
 }
 
 } // namespace Lunar::Symbols

@@ -11,8 +11,8 @@ LUNAR_MODULE_OPEN() {
     if (Lunar::Loader::Initialize())
         return 0;
 
-    // Lunar::Symbols::lua_pushcfunction(L, &hello);
-    // Lunar::Symbols::lua_setfield(L, LUA_GLOBALSINDEX, "hello");
+    Lunar::Symbols::lua_pushcfunction(L, &hello);
+    Lunar::Symbols::lua_setfield(L, LUA_GLOBALSINDEX, "hello");
 
     return 0;
 }
