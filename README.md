@@ -1,3 +1,5 @@
+# This project is deprecated in favor of [Lunar-SOL2](https://github.com/norrbotten/lunar-sol2)
+
 # Lunar
 ### A library for writing C++ modules for Garry's Mod
 
